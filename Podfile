@@ -4,7 +4,7 @@
 # use_frameworks!
 
 target 'Player' do
-
+pod 'Masonry'
 pod 'SDWebImage'
 pod 'FDFullscreenPopGesture'
 # ZFDownload->1.0.0，如果发现pod search ZFDownload 搜索出来的不是最新版本
