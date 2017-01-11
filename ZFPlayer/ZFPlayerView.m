@@ -198,6 +198,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
     [super layoutSubviews];
     [self layoutIfNeeded];
     self.playerLayer.frame = self.bounds;
+    _controlView.frame = self.bounds;
     [UIApplication sharedApplication].statusBarHidden = NO;
 }
 
@@ -735,11 +736,47 @@ typedef NS_ENUM(NSInteger, PanDirection){
             [self removeFromSuperview];
             ZFBrightnessView *brightnessView = [ZFBrightnessView sharedBrightnessView];
             [[UIApplication sharedApplication].keyWindow insertSubview:self belowSubview:brightnessView];
-            [self mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.width.equalTo(@(ScreenHeight));
-                make.height.equalTo(@(ScreenWidth));
-                make.center.equalTo([UIApplication sharedApplication].keyWindow);
-            }];
+            
+            NSLayoutConstraint *selfWidthConstraint =
+            [NSLayoutConstraint constraintWithItem:self
+                                         attribute:NSLayoutAttributeWidth
+                                         relatedBy:NSLayoutRelationEqual
+                                            toItem:nil
+                                         attribute:NSLayoutAttributeWidth
+                                        multiplier:1.0
+                                          constant:ScreenWidth > ScreenHeight ? ScreenWidth : ScreenHeight];
+            [self.superview addConstraint:selfWidthConstraint];
+            
+            NSLayoutConstraint *selfHeightConstraint =
+            [NSLayoutConstraint constraintWithItem:self
+                                         attribute:NSLayoutAttributeHeight
+                                         relatedBy:NSLayoutRelationEqual
+                                            toItem:nil
+                                         attribute:NSLayoutAttributeHeight
+                                        multiplier:1.0
+                                          constant:ScreenWidth < ScreenHeight ? ScreenWidth : ScreenHeight];
+            [self.superview addConstraint:selfHeightConstraint];
+            
+            NSLayoutConstraint *selfCenterXConstraint =
+            [NSLayoutConstraint constraintWithItem:self
+                                         attribute:NSLayoutAttributeCenterX
+                                         relatedBy:NSLayoutRelationEqual
+                                            toItem:[UIApplication sharedApplication].keyWindow
+                                         attribute:NSLayoutAttributeCenterX
+                                        multiplier:1.0
+                                          constant:0];
+            [self.superview addConstraint:selfCenterXConstraint];
+            
+            NSLayoutConstraint *selfCenterYConstraint =
+            [NSLayoutConstraint constraintWithItem:self
+                                         attribute:NSLayoutAttributeCenterY
+                                         relatedBy:NSLayoutRelationEqual
+                                            toItem:[UIApplication sharedApplication].keyWindow
+                                         attribute:NSLayoutAttributeCenterY
+                                        multiplier:1.0
+                                          constant:0];
+            [self.superview addConstraint:selfCenterYConstraint];
+            
         }
     }
     // iOS6.0之后,设置状态条的方法能使用的前提是shouldAutorotate为NO,也就是说这个视图控制器内,旋转要关掉;
@@ -856,11 +893,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
             }
             [self.brightnessView removeFromSuperview];
             [[UIApplication sharedApplication].keyWindow addSubview:self.brightnessView];
-            [self.brightnessView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.width.height.mas_equalTo(155);
-                make.leading.mas_equalTo((ScreenWidth-155)/2);
-                make.top.mas_equalTo((ScreenHeight-155)/2);
-            }];
+            self.brightnessView.frame = CGRectMake((ScreenWidth-155)/2, (ScreenHeight-155)/2, 155, 155);
         } else {
             if (currentOrientation == UIInterfaceOrientationLandscapeRight) {
                 [self toOrientation:UIInterfaceOrientationLandscapeRight];
@@ -869,10 +902,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
             }
             [self.brightnessView removeFromSuperview];
             [self addSubview:self.brightnessView];
-            [self.brightnessView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.center.mas_equalTo(self);
-                make.width.height.mas_equalTo(155);
-            }];
+            self.brightnessView.frame = CGRectMake((ScreenWidth-155)/2, (ScreenHeight-155)/2, 155, 155);
             
         }
     }
@@ -1377,9 +1407,6 @@ typedef NS_ENUM(NSInteger, PanDirection){
     _controlView = controlView;
     controlView.delegate = self;
     [self addSubview:controlView];
-    [controlView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.leading.trailing.bottom.equalTo(self);
-    }];
 }
 
 - (void)setPlayerModel:(ZFPlayerModel *)playerModel
