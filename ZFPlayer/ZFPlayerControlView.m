@@ -214,7 +214,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     self.progressView.frame = CGRectMake(CGRectGetMaxX(self.currentTimeLabel.frame)+4, 0, progressViewWidth, 30);
     self.progressView.center = CGPointMake(self.progressView.center.x, self.startBtn.center.y);
     
-    self.videoSlider.frame = self.progressView.frame;
+    self.videoSlider.frame = CGRectMake(CGRectGetMaxX(self.currentTimeLabel.frame)+4, 0, progressViewWidth, 30);
     self.videoSlider.center = CGPointMake(self.videoSlider.center.x, self.startBtn.center.y);
     
     self.lockBtn.frame = CGRectMake(15, 0, 32, 32);
@@ -234,8 +234,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     self.fastView.frame = CGRectMake(0, 0, 125, 80);
     self.fastView.center = self.center;
     
-    self.fastImageView.frame = CGRectMake(0, 5, 32, 32);
-    self.fastImageView.center = CGPointMake(self.fastView.center.x, self.fastImageView.center.y);
+    self.fastImageView.frame = CGRectMake((125-32)/2.0f, 10, 32, 32);
     
     self.fastTimeLabel.frame = CGRectMake(0, self.fastView.frame.size.height - 30 -5, self.fastView.frame.size.width, 20);
     
