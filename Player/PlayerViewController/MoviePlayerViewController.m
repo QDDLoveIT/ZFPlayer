@@ -24,6 +24,7 @@
 #import "MoviePlayerViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <Masonry/Masonry.h>
 #import <ZFDownload/ZFDownloadManager.h>
 #import "ZFPlayer.h"
 #import "UINavigationController+FDFullscreenPopGesture.h"
@@ -154,5 +155,15 @@
     // self.playerModel.seekTime         = 15;
     [self.playerView resetToPlayNewVideo:self.playerModel];
 }
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
 
 @end
