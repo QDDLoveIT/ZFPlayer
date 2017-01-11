@@ -141,8 +141,6 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
         [self.topImageView addSubview:self.titleLabel];
         [self addSubview:self.closeBtn];
         [self addSubview:self.bottomProgressView];
-        // 添加子控件的约束
-        [self makeSubViewsConstraints];
         
         self.downLoadBtn.hidden     = YES;
         self.resolutionBtn.hidden   = YES;
@@ -165,152 +163,91 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 }
 
-- (void)makeSubViewsConstraints
+
+/**
+ Called by layoutSubviews, add by Hneray Luo 2017.01.10.
+ */
+- (void)relayoutSubViews
 {
-    [self.placeholderImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsZero);
-    }];
+    CGFloat videoPortWidth = self.frame.size.width;
     
-    [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.trailing.equalTo(self.mas_trailing).offset(7);
-        make.top.equalTo(self.mas_top).offset(-7);
-        make.width.height.mas_equalTo(20);
-    }];
     
-    [self.topImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.trailing.equalTo(self);
-        make.top.equalTo(self.mas_top).offset(0);
-        make.height.mas_equalTo(50);
-    }];
+    self.placeholderImageView.frame = self.frame;
     
-    [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.topImageView.mas_leading).offset(10);
-        make.top.equalTo(self.topImageView.mas_top).offset(7);
-        make.width.height.mas_equalTo(30);
-    }];
-
-    [self.downLoadBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(40);
-        make.height.mas_equalTo(49);
-        make.trailing.equalTo(self.topImageView.mas_trailing).offset(-10);
-        make.centerY.equalTo(self.backBtn.mas_centerY);
-    }];
-
-    [self.resolutionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(40);
-        make.height.mas_equalTo(25);
-        make.trailing.equalTo(self.downLoadBtn.mas_leading).offset(-10);
-        make.centerY.equalTo(self.backBtn.mas_centerY);
-    }];
     
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.backBtn.mas_trailing).offset(5);
-        make.centerY.equalTo(self.backBtn.mas_centerY);
-        make.trailing.equalTo(self.resolutionBtn.mas_leading).offset(-10);
-    }];
+    /* 上边一排控件的容器 */
+    self.topImageView.frame = CGRectMake(0, 0, videoPortWidth, 50);
     
-    [self.bottomImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.trailing.bottom.equalTo(self);
-        make.height.mas_equalTo(50);
-    }];
+    /* 第一行按钮及标题中心线都对齐返回按钮 */
+    self.backBtn.frame = CGRectMake(10, 7, 30, 30);
     
-    [self.startBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(5);
-        make.bottom.equalTo(self.bottomImageView.mas_bottom).offset(-5);
-        make.width.height.mas_equalTo(30);
-    }];
+    self.closeBtn.frame = CGRectMake(videoPortWidth-20-7, 0, 20, 20);
+    self.closeBtn.center = CGPointMake(self.closeBtn.center.x, self.backBtn.center.y);
     
-    [self.currentTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.startBtn.mas_trailing).offset(-3);
-        make.centerY.equalTo(self.startBtn.mas_centerY);
-        make.width.mas_equalTo(43);
-    }];
+    self.downLoadBtn.frame = CGRectMake(videoPortWidth-40-10, 0, 40, 49);
+    self.downLoadBtn.center = CGPointMake(self.downLoadBtn.center.x, self.backBtn.center.y);
     
-    [self.fullScreenBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(30);
-        make.trailing.equalTo(self.bottomImageView.mas_trailing).offset(-5);
-        make.centerY.equalTo(self.startBtn.mas_centerY);
-    }];
+    self.resolutionBtn.frame = CGRectMake(CGRectGetMinX(self.downLoadBtn.frame)-25-10, 0, 40, 25);
+    self.resolutionBtn.center = CGPointMake(self.resolutionBtn.center.x, self.backBtn.center.y);
     
-    [self.totalTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.trailing.equalTo(self.fullScreenBtn.mas_leading).offset(3);
-        make.centerY.equalTo(self.startBtn.mas_centerY);
-        make.width.mas_equalTo(43);
-    }];
+    self.titleLabel.frame = CGRectMake(CGRectGetMaxX(self.backBtn.frame) + 10, 0, 200 /*暂定*/, 20);
+    self.titleLabel.center = CGPointMake(self.titleLabel.center.x, self.backBtn.center.y);
     
-    [self.progressView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.currentTimeLabel.mas_trailing).offset(4);
-        make.trailing.equalTo(self.totalTimeLabel.mas_leading).offset(-4);
-        make.centerY.equalTo(self.startBtn.mas_centerY);
-    }];
     
-    [self.videoSlider mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.currentTimeLabel.mas_trailing).offset(4);
-        make.trailing.equalTo(self.totalTimeLabel.mas_leading).offset(-4);
-        make.centerY.equalTo(self.currentTimeLabel.mas_centerY).offset(-1);
-        make.height.mas_equalTo(30);
-    }];
+    /* 底下一排控件的容器 */
+    self.bottomImageView.frame = CGRectMake(0, self.frame.size.height-50, videoPortWidth, 50);
     
-    [self.lockBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading).offset(15);
-        make.centerY.equalTo(self.mas_centerY);
-        make.width.height.mas_equalTo(32);
-    }];
+    self.startBtn.frame = CGRectMake(5, 50-30-5, 30, 30);
     
-    [self.repeatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-         make.center.equalTo(self);
-    }];
+    self.currentTimeLabel.frame = CGRectMake(38, 0, 43, 20);
+    self.currentTimeLabel.center = CGPointMake(self.currentTimeLabel.center.x, self.startBtn.center.y);
     
-    [self.playeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(50);
-        make.center.equalTo(self);
-    }];
+    self.fullScreenBtn.frame = CGRectMake(videoPortWidth-30-5, 0, 30, 30);
+    self.fullScreenBtn.center = CGPointMake(self.fullScreenBtn.center.x, self.startBtn.center.y);
     
-    [self.activity mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self);
-        make.width.with.height.mas_equalTo(45);
-    }];
+    self.totalTimeLabel.frame = CGRectMake(CGRectGetMinX(self.fullScreenBtn.frame)-43-3, 0, 43, 20);
+    self.totalTimeLabel.center = CGPointMake(self.totalTimeLabel.center.x, self.startBtn.center.y);
     
-    [self.failBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self);
-        make.width.mas_equalTo(130);
-        make.height.mas_equalTo(33);
-    }];
+    CGFloat endWidth = videoPortWidth - CGRectGetMinX(self.totalTimeLabel.frame) + 4;
+    CGFloat frontWidth = CGRectGetMaxX(self.currentTimeLabel.frame) + 4;
+    CGFloat progressViewWidth = videoPortWidth - frontWidth - endWidth;
+    self.progressView.frame = CGRectMake(CGRectGetMaxX(self.currentTimeLabel.frame)+4, 0, progressViewWidth, 30);
+    self.progressView.center = CGPointMake(self.progressView.center.x, self.startBtn.center.y);
     
-    [self.fastView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(125);
-        make.height.mas_equalTo(80);
-        make.center.equalTo(self);
-    }];
+    self.videoSlider.frame = self.progressView.frame;
+    self.videoSlider.center = CGPointMake(self.videoSlider.center.x, self.startBtn.center.y);
     
-    [self.fastImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_offset(32);
-        make.height.mas_offset(32);
-        make.top.mas_equalTo(5);
-        make.centerX.mas_equalTo(self.fastView.mas_centerX);
-    }];
+    self.lockBtn.frame = CGRectMake(15, 0, 32, 32);
+    self.lockBtn.center = CGPointMake(self.lockBtn.center.x, self.center.y);
     
-    [self.fastTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.with.trailing.mas_equalTo(0);
-        make.top.mas_equalTo(self.fastImageView.mas_bottom).offset(2);
-    }];
+    self.repeatBtn.center = self.center;
     
-    [self.fastProgressView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.mas_equalTo(12);
-        make.trailing.mas_equalTo(-12);
-        make.top.mas_equalTo(self.fastTimeLabel.mas_bottom).offset(10);
-    }];
+    self.playeBtn.frame = CGRectMake(0, 0, 50, 50);
+    self.playeBtn.center = self.center;
     
-    [self.bottomProgressView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.trailing.mas_offset(0);
-        make.bottom.mas_offset(0);
-    }];
+    self.activity.frame = CGRectMake(0, 0, 45, 45);
+    self.activity.center = self.center;
+    
+    self.failBtn.frame = CGRectMake(0, 0, 130, 33);
+    self.failBtn.center = self.center;
+    
+    self.fastView.frame = CGRectMake(0, 0, 125, 80);
+    self.fastView.center = self.center;
+    
+    self.fastImageView.frame = CGRectMake(0, 5, 32, 32);
+    self.fastImageView.center = CGPointMake(self.fastView.center.x, self.fastImageView.center.y);
+    
+    self.fastTimeLabel.frame = CGRectMake(0, self.fastView.frame.size.height - 30 -5, self.fastView.frame.size.width, 20);
+    
+    self.fastProgressView.frame = CGRectMake(12, CGRectGetMaxY(self.fastTimeLabel.frame) + 5, self.fastView.frame.size.width - 24, 20);
+    
+    self.bottomProgressView.frame = CGRectMake(0, self.frame.size.height - 2, videoPortWidth, 2);
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    [self layoutIfNeeded];
+//    [self layoutIfNeeded];
     [self zf_playerCancelAutoFadeOutControlView];
     if (!self.isShrink && !self.isPlayEnd) {
         // 只要屏幕旋转就显示控制层
@@ -323,6 +260,9 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     } else {
         [self setOrientationLandscapeConstraint];
     }
+    
+    // *************************** Henray Luo Add on 2017.01.10. *************************** //
+    [self relayoutSubViews];
 }
 
 #pragma mark - Action
@@ -534,9 +474,9 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     self.lockBtn.hidden         = !self.isFullScreen;
     self.fullScreenBtn.selected = self.isFullScreen;
     [self.backBtn setImage:ZFPlayerImage(@"ZFPlayer_back_full") forState:UIControlStateNormal];
-    [self.backBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_offset(27);
-    }];
+    
+    //self.backBtn.frame = CGRectMake(10, 27, 30, 30);
+    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
 }
 /**
@@ -547,9 +487,8 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     self.fullScreen             = NO;
     self.lockBtn.hidden         = !self.isFullScreen;
     self.fullScreenBtn.selected = self.isFullScreen;
-    [self.backBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_offset(7);
-    }];
+
+//    self.backBtn.frame = CGRectMake(10, 7, 30, 30);
 
     if (self.isCellVideo) {
         [self.backBtn setImage:ZFPlayerImage(@"ZFPlayer_close") forState:UIControlStateNormal];
