@@ -246,9 +246,23 @@ typedef NS_ENUM(NSInteger, PanDirection){
 {
     [self removeFromSuperview];
     [view addSubview:self];
-    [self mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_offset(UIEdgeInsetsZero);
-    }];
+    
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    NSArray *selfHConstraint =
+    [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[self]-0-|"
+                                            options:0
+                                            metrics:nil
+                                              views:@{@"self" : self}];
+    [view addConstraints:selfHConstraint];
+    
+    NSArray *selfVConstraint =
+    [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[self]-0-|"
+                                            options:0
+                                            metrics:nil
+                                              views:@{@"self" : self}];
+    [view addConstraints:selfVConstraint];
+    
 }
 
 /**

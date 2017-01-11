@@ -242,6 +242,8 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     self.fastProgressView.frame = CGRectMake(12, CGRectGetMaxY(self.fastTimeLabel.frame) + 5, self.fastView.frame.size.width - 24, 20);
     
     self.bottomProgressView.frame = CGRectMake(0, self.frame.size.height - 2, videoPortWidth, 2);
+    
+    self.resolutionView.frame = CGRectMake(self.resolutionBtn.frame.origin.x, self.resolutionBtn.frame.origin.y, 40, 25 * self.resolutionArray.count);
 }
 
 - (void)layoutSubviews
@@ -1122,13 +1124,6 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     self.resolutionView.hidden = YES;
     self.resolutionView.backgroundColor = RGBA(0, 0, 0, 0.7);
     [self addSubview:self.resolutionView];
-    
-    [self.resolutionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(40);
-        make.height.mas_equalTo(25*resolutionArray.count);
-        make.leading.equalTo(self.resolutionBtn.mas_leading).offset(0);
-        make.top.equalTo(self.resolutionBtn.mas_bottom).offset(0);
-    }];
     
     // 分辨率View上边的Btn
     for (NSInteger i = 0 ; i < resolutionArray.count; i++) {
