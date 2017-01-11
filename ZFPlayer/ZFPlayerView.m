@@ -632,14 +632,49 @@ typedef NS_ENUM(NSInteger, PanDirection){
     }
     [self layoutIfNeeded];
     [[UIApplication sharedApplication].keyWindow addSubview:self];
-    [self mas_remakeConstraints:^(MASConstraintMaker *make) {
-        CGFloat width = ScreenWidth*0.5-20;
-        CGFloat height = (self.bounds.size.height / self.bounds.size.width);
-        make.width.mas_equalTo(width);
-        make.height.equalTo(self.mas_width).multipliedBy(height);
-        make.trailing.mas_equalTo(-10);
-        make.bottom.mas_equalTo(-self.tableView.contentInset.bottom-10);
-    }];
+    
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    NSLayoutConstraint *selfWidthConstraint =
+    [NSLayoutConstraint constraintWithItem:self
+                                 attribute:NSLayoutAttributeWidth
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:nil
+                                 attribute:NSLayoutAttributeWidth
+                                multiplier:1.0
+                                  constant:ScreenWidth*0.5-20];
+    [self.superview addConstraint:selfWidthConstraint];
+    
+    NSLayoutConstraint *selfHeightConstraint =
+    [NSLayoutConstraint constraintWithItem:self
+                                 attribute:NSLayoutAttributeHeight
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self
+                                 attribute:NSLayoutAttributeWidth
+                                multiplier:9/16.0f
+                                  constant:0];
+    [self.superview addConstraint:selfHeightConstraint];
+    
+    NSLayoutConstraint *selfTrailingConstraint =
+    [NSLayoutConstraint constraintWithItem:self
+                                 attribute:NSLayoutAttributeTrailing
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self.superview
+                                 attribute:NSLayoutAttributeTrailing
+                                multiplier:1.0
+                                  constant:-10];
+    [self.superview addConstraint:selfTrailingConstraint];
+    
+    NSLayoutConstraint *selfBottomConstraint =
+    [NSLayoutConstraint constraintWithItem:self
+                                 attribute:NSLayoutAttributeBottom
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self.tableView
+                                 attribute:NSLayoutAttributeBottom
+                                multiplier:1.0
+                                  constant:-10];
+    [self.superview addConstraint:selfBottomConstraint];
+    
     // 小屏播放
     [self.controlView zf_playerBottomShrinkPlay];
 }
