@@ -180,6 +180,11 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     
     /* 第一行按钮及标题中心线都对齐返回按钮 */
     self.backBtn.frame = CGRectMake(10, 7, 30, 30);
+    if (ScreenWidth>ScreenHeight) {
+        self.backBtn.frame = CGRectMake(10, 17, 30, 30);
+    } else {
+        self.backBtn.frame = CGRectMake(10, 7, 30, 30);
+    }
     
     self.closeBtn.frame = CGRectMake(videoPortWidth-20-7, 0, 20, 20);
     self.closeBtn.center = CGPointMake(self.closeBtn.center.x, self.backBtn.center.y);
